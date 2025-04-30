@@ -2,22 +2,336 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Styles de base */
+.main-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+/* Roulette */
+.wheel-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+}
+
+.wheel {
+  position: relative;
+  width: 80vmin;
+  height: 80vmin;
+  max-width: 600px;
+  max-height: 600px;
+  border-radius: 50%;
+  transition: transform 2s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+}
+
+.wheel-section {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
+  border-radius: 50%;
+}
+
+.wheel-section.action {
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+}
+
+.wheel-section.truth {
+  background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+  transform: rotate(180deg);
+}
+
+.wheel-center {
+  position: absolute;
+  width: 20%;
+  height: 20%;
+  background: white;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: white;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+/* Contenu */
+.content {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.5s ease;
+}
+
+.content.challenge-active {
+  transform: scale(0.95);
+}
+
+.title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: #333;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 800;
+}
+
+/* Boutons de choix */
+.choice-container {
+  display: flex;
+  gap: 2rem;
+  transition: all 0.5s ease;
+}
+
+.choice-container.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.choice-container.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.choice-btn {
+  padding: 1.5rem 3rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.choice-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+}
+
+.truth-btn {
+  background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+}
+
+/* Conteneur du défi */
+.challenge-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.reset-btn {
+  padding: 1rem 2rem;
+  background: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.reset-btn:hover {
+  background: #f1f1f1;
+  transform: translateY(-3px);
+}
+
+.card {
+  position: relative;
+  border-radius: 16px;
+  padding: 2rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Thème Action */
+.action-card {
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+  color: white;
+}
+
+/* Thème Vérité */
+.truth-card {
+  background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+  color: white;
+}
+
+/* Badge */
+.card-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.action-card .card-badge {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.truth-card .card-badge {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Texte */
+.card-text {
+  font-size: 1.4rem;
+  line-height: 1.5;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* Coins décoratifs */
+.card-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-width: 2px;
+  border-style: solid;
+  opacity: 0.5;
+}
+
+.card-corner.top-left {
+  top: 10px;
+  left: 10px;
+  border-top-left-radius: 10px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.card-corner.top-right {
+  top: 10px;
+  right: 10px;
+  border-top-right-radius: 10px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.card-corner.bottom-left {
+  bottom: 10px;
+  left: 10px;
+  border-bottom-left-radius: 10px;
+  border-right: none;
+  border-top: none;
+}
+
+.card-corner.bottom-right {
+  bottom: 10px;
+  right: 10px;
+  border-bottom-right-radius: 10px;
+  border-left: none;
+  border-top: none;
+}
+
+.action-card .card-corner {
+  border-color: white;
+}
+
+.truth-card .card-corner {
+  border-color: white;
+}
+
+/* Motif de fond */
+.card-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  background-image: radial-gradient(circle at 25% 25%, currentColor 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: 1;
+}
+
+/* Effet au survol */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  color: #333;
+}
+
+h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #555;
 }
 
 @layer utilities {
