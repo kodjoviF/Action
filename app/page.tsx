@@ -2,26 +2,32 @@
 import { useState, useRef, useEffect } from 'react';
 import { Challenge, getRandomChallenge } from '@/lib/questions';
 import ActionCard from '@/component/ActionCard';
+import CategorySelector from '@/component/CategorySelector';
 import TruthCard from '@/component/TruthCard';
 
 export default function Home() {
+  const [currentCategory, setCurrentCategory] = useState<'chill' | 'medium' | 'spicy' | null>(null);
   const [currentChallenge, setCurrentChallenge] = useState<Challenge | null>(null);
   const [showChoice, setShowChoice] = useState(true);
   const [wheelRotation, setWheelRotation] = useState(0);
   const wheelRef = useRef<HTMLDivElement>(null);
 
+  const handleCategorySelect = (category: 'chill' | 'medium' | 'spicy') => {
+    setCurrentCategory(category);
+    setShowChoice(true);
+  };
+
   const handleNewChallenge = (type: 'action' | 'truth') => {
-    // Animation de disparition
     setShowChoice(false);
     
     // Rotation de la roulette
-    const rotations = 5; // Nombre de tours complets
+    const rotations = 5;
     const targetRotation = wheelRotation + 360 * rotations + (type === 'action' ? 0 : 180);
     setWheelRotation(targetRotation);
     
     // Délai pour synchroniser avec l'animation
     setTimeout(() => {
-      setCurrentChallenge(getRandomChallenge(type));
+      setCurrentChallenge(getRandomChallenge(type, currentCategory ?? undefined));
     }, 2000);
   };
 
@@ -36,9 +42,22 @@ export default function Home() {
     }
   }, [wheelRotation]);
 
+  if (!currentCategory) {
+    return <CategorySelector onSelect={handleCategorySelect} />;
+  }
+
   return (
     <main className="main-container">
-      {/* Roulette animée en arrière-plan */}
+      {currentCategory && !currentChallenge && (
+      <button 
+        onClick={() => setCurrentCategory(null)}
+        className="change-category-btn"
+      >
+        Changer de catégorie
+      </button>
+    )}
+
+      {/* Roulette animée */}
       <div className="wheel-bg">
         <div className="wheel" ref={wheelRef}>
           <div className="wheel-section action"></div>
@@ -50,7 +69,7 @@ export default function Home() {
 
       {/* Contenu principal */}
       <div className={`content ${currentChallenge ? 'challenge-active' : ''}`}>
-        <h1 className="title"></h1>
+        {/* <h1 className="title">Action ou Vérité - {currentCategory?.toUpperCase()}</h1> */}
         
         {!currentChallenge ? (
           <div className={`choice-container ${showChoice ? 'visible' : 'hidden'}`}>

@@ -325,6 +325,137 @@ p {
   font-size: 1.2rem;
   color: #555;
 }
+.category-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.category-container h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+  font-weight: 800;
+}
+
+.category-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.category-btn {
+  padding: 1.8rem 1rem;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-btn span:first-child {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Couleurs des catégories */
+.chill {
+  background: linear-gradient(145deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+}
+
+.medium {
+  background: linear-gradient(145deg, #FFC107 0%, #FF9800 100%);
+  color: white;
+}
+
+.spicy {
+  background: linear-gradient(145deg, #F44336 0%, #E91E63 100%);
+  color: white;
+}
+
+/* Effets au survol */
+.category-btn:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Animation au clic */
+.category-btn:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .category-buttons {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .category-container {
+    width: 90%;
+    padding: 1.5rem;
+  }
+  
+  .category-btn {
+    padding: 1.5rem 1rem;
+    font-size: 1.1rem;
+  }
+}
+.change-category-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 0.8rem 1.5rem;
+  background: #ffffff;
+  color: #333;
+  border: 2px solid #ff416c;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.change-category-btn:hover {
+  background: #ff416c;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.change-category-btn:active {
+  transform: translateY(0);
+}
+
+/* Icône optionnelle */
+.change-category-btn::before {
+  content: '↻';
+  font-size: 1.2rem;
+}
 
 @layer utilities {
   .text-balance {
